@@ -132,3 +132,5 @@ build
 
 # Mac
 .DS_Store
+
+test-report/
