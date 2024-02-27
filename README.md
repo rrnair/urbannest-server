@@ -1,2 +1,2 @@
 # urbannest-server
-A real estate listing REST API backend 
+An REST API server for Web UI
