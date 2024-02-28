@@ -106,3 +106,24 @@ export interface Address {
     /** Pin code of the place */
     pin?: number
 }
+
+
+/** An enquiry from a website visitor */
+export interface Enquiry {
+    
+    name: string,
+    
+    email: string,
+    
+    phone: string,
+    
+    message: string,
+    
+    propertyId?: string,
+    
+    propertyCategory?: PropertyCategory
+}
+
+export interface EnquiryResponse {
+    message: string
+}

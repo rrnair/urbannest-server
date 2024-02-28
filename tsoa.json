@@ -2,8 +2,12 @@
     "entryFile": "src/index.ts",
     "noImplicitAdditionalProperties": "throw-on-extras",
     "spec": {
-      "outputDirectory": "api-docs",
+      "outputDirectory": "build",
       "specVersion": 3
-    }
+    },
+    "routes": {
+      "routesDir": "build"
+    },
+    "controllerPathGlobs": ["src/**/*-controller.ts"]
   }
   

@@ -1,15 +1,16 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
 import * as dotenv from "dotenv";
-import express, { Application } from "express";
+import express, { Application, Router, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { StackUtils } from "./stack-utils";
 import { logger } from "./logger";
 import path from "path";
-import { routes } from "./routes";
+//import { routes } from "./routes";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
+import { RegisterRoutes } from "../build/routes";
 
 // Setup App variables
 dotenv.config();
@@ -39,9 +40,26 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
 
+
+// Create a base router
+const baseRouter = Router();
+
+// The root of the route does nothing than returning a message
+baseRouter.use('/', (request: Request, ressponse: Response) => {
+    logger.info("Hit default route /");
+    ressponse.send("What's up ?!");
+});
+
+// All routes to this should go have base path `/api`. 
+// TODO: Add version as well here.
+app.use('/api', baseRouter);
+
+// Register all routes
+RegisterRoutes(baseRouter);
+
 // Enable API documentation for dev env
 if (stage === 'dev' || stage === 'test') {
-    app.use(express.static("api-docs"));
+    app.use(express.static("build"));
 
     // Dev UI team can use "/docs" to go through the exposed REST APIs, this produces a Swagger 3.0 doc
     app.use(
@@ -56,7 +74,7 @@ if (stage === 'dev' || stage === 'test') {
 }
 
 // Setup routes
-app.use('/', routes);
+//app.use('/', routes);
 
 app.listen(port, () => {
     logger.info(`Server started listening on port ${port}`);

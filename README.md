@@ -4,7 +4,6 @@ Urban Nest Server is a REST API Server that serves as a backend to the Web UI `u
 
 The server also has a limited write operations that are secured for a logged in user (admin) to write/update properties handled in the website.
 
-
 ## REST APIs
 
 1. Ping - Hearbeat API, returns a Hello message with current date
@@ -37,6 +36,5 @@ Run below targets in a terminal,
 5. `npm run coverage` - Runs code coverage
 6. `npm run copyright` - Checks whether the code files has copyright header else this will add the copyright header for source code files that are added to Git
 7. `npm run upgrade` - Upgrades NPM dependencies to its latest version
-
 
 It is recommended to run the `npm run swagger` produce the latest Swagger API documentation. Once the project is run in `dev` mode/stage these APIs can be read via browser using `http://<hostname>:<port>/docs` URL i.e. `http://localhost:7009/docs`. The swagger APIs are not loaded in Production or Test environments.

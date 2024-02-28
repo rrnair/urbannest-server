@@ -4,9 +4,9 @@
   "description": "A REST API server for Web UI",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
-    "swagger": "tsoa spec",
+    "build": "tsoa spec-and-routes && tsc",
+    "dev": "tsoa spec-and-routes && ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "swagger": "tsoa spec-and-routes",
     "test": "jest --config=jest.config.js",
     "copyright": "copyright-header --fix --copyrightHolder 'Ubran Nest or its affiliates. All rights reserved.' ",
     "coverage": "env JEST_JUNIT_OUTPUT_NAME=junit-unit.xml namespace=${NAMESPACE} jest unit --coverage --testTimeout 60000 --testEnvironment=node --reporters=default --reporters=jest-junit",
