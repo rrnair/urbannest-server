@@ -1,13 +1,12 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
 import * as dotenv from "dotenv";
-import express, { Application, Router, Request, Response } from "express";
+import express, { Application, Router } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { StackUtils } from "./stack-utils";
 import { logger } from "./logger";
 import path from "path";
-//import { routes } from "./routes";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "../build/routes";
@@ -30,6 +29,10 @@ const deploymentConfig:{[key:string]: {[key:string]: string}} = StackUtils.getDe
 // Is PORT set in env variables else use default value
 const port = parseInt(process.env.PORT as string || (deploymentConfig.port as string | undefined || "7009"));
 
+const apiVersion = process.env.VERSION || 'v1';
+
+export const pathPrefix = `/api/${apiVersion}`;
+
 logger.info(`Binding to port: ${port}`);
 
 // Create the application instance
@@ -40,22 +43,14 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
 
-
 // Create a base router
-const baseRouter = Router();
-
-// The root of the route does nothing than returning a message
-baseRouter.use('/', (request: Request, ressponse: Response) => {
-    logger.info("Hit default route /");
-    ressponse.send("What's up ?!");
-});
-
-// All routes to this should go have base path `/api`. 
-// TODO: Add version as well here.
-app.use('/api', baseRouter);
+const controllerRoutes = Router();
 
 // Register all routes
-RegisterRoutes(baseRouter);
+RegisterRoutes(controllerRoutes);
+
+// Mount all controller routes under the prefix /api/{version}/
+app.use(pathPrefix, controllerRoutes);
 
 // Enable API documentation for dev env
 if (stage === 'dev' || stage === 'test') {
@@ -63,7 +58,7 @@ if (stage === 'dev' || stage === 'test') {
 
     // Dev UI team can use "/docs" to go through the exposed REST APIs, this produces a Swagger 3.0 doc
     app.use(
-        "/docs",
+        `${pathPrefix}/docs`,
         swaggerUi.serve,
         swaggerUi.setup(undefined, {
             swaggerOptions: {
@@ -72,9 +67,6 @@ if (stage === 'dev' || stage === 'test') {
         })
     );
 }
-
-// Setup routes
-//app.use('/', routes);
 
 app.listen(port, () => {
     logger.info(`Server started listening on port ${port}`);
