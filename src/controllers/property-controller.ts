@@ -1,9 +1,10 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { randomUUID } from "crypto";
-import {Get, Route} from "tsoa";
+import { Controller, Get, Path, Post, Route} from "tsoa";
 import { Property, PropertyStatus, PropertyCategory } from "../types/stack-types";
 import { logger } from "../logger";
+import PropertyService from "../service/property-service";
+import { injectable } from "tsyringe";
 
 /**
  * Controller that handles property read/write
@@ -11,9 +12,27 @@ import { logger } from "../logger";
  * @author Ratheesh Nair
  * @since 1.0
  */
+@injectable()
 @Route("/props")
-export class PropertyListController {
+export class PropertyListController extends Controller {
 
+    constructor(private propertyService: PropertyService) { super(); }
+
+
+    /**
+     * Find a property by its unique id
+     * 
+     * @param id Unique id of the property
+     * @returns Property matching the specified id else undefined
+     */
+    @Get("/{id}")
+    public async get(@Path() id: string): Promise<Property | undefined> {
+        const prop =  this.propertyService.getById(id);
+        if (! prop) {
+            return prop;
+        }
+        return undefined;
+    }
 
     /**
      * Get all properties, filter by Property category and completion status.
@@ -30,14 +49,15 @@ export class PropertyListController {
         if (category == PropertyCategory.All && status === PropertyStatus.All) {
             return this.getAll();
         }
-        
-        // Is this a valid status passed
+
+        // Compute all conditions
+        // If the category is `all` and the status is `all` then return all available properties
         if ((PropertyCategory.All === category || PropertyCategory.Residential === category 
                 || PropertyCategory.Commerical === category) 
             && (PropertyStatus.All === status || PropertyStatus.Completed === status 
             || PropertyStatus.New === status || PropertyStatus.Upcoming === status)) {
             
-                logger.info(`category: ${category}, Status: ${status}`)
+                logger.info(`Property listing - category: ${category}, Status: ${status}`);
                 return (await this.getAll()).filter(
                     p => (PropertyCategory.All == category || p.category === category) 
                             && (PropertyStatus.All === status || p.status == status));
@@ -54,55 +74,6 @@ export class PropertyListController {
      */
     @Get("/all")
     public async getAll(): Promise<Property[]> {
-
-        return [{
-            id: randomUUID(),
-            name: 'Brigade Metropolis',
-            title: 'In between ITPL',
-            shortDescription: 'A 28 acre property',
-            listedOn: new Date(),
-            category: PropertyCategory.Residential,
-            status: PropertyStatus.New,
-            builder: 'Brigade',
-            address: {
-                city: 'Bangalore'
-            }
-        }, {
-            id: randomUUID(),
-            name: 'Brigade Metropolis',
-            title: 'In between ITPL',
-            shortDescription: 'A 28 acre property',
-            listedOn: new Date(),
-            category: PropertyCategory.Residential,
-            status: PropertyStatus.Upcoming,
-            builder: 'Brigade',
-            address: {
-                city: 'Bangalore'
-            }
-        }, {
-            id: randomUUID(),
-            name: 'Brigade Metropolis',
-            title: 'In between ITPL',
-            shortDescription: 'A 28 acre property',
-            listedOn: new Date(),
-            category: PropertyCategory.Residential,
-            status: PropertyStatus.Completed,
-            builder: 'Brigade',
-            address: {
-                city: 'Bangalore'
-            }
-        }, {
-            id: randomUUID(),
-            name: 'Brigade Metropolis',
-            title: 'In between ITPL',
-            shortDescription: 'A 28 acre property',
-            listedOn: new Date(),
-            category: PropertyCategory.Residential,
-            status: PropertyStatus.Completed,
-            builder: 'Brigade',
-            address: {
-                city: 'Bangalore'
-            }
-        }];
+        return this.propertyService.getAll();
     }
 }

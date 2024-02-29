@@ -6,6 +6,8 @@ The server also has a limited write operations that are secured for a logged in 
 
 ## REST APIs
 
+All APIs URLs starts with `api/{version}/` where the version is the API version, usually specified as `v1`, `v2` etc.
+
 1. Ping - Hearbeat API, returns a Hello message with current date
 2. Property APIs - APIs that returns one or more properties, a filter can be applied by Property Category (residential/commercial) and status (new/upcoming/completed)
 3. Admin APIs - Allows to add/update/delete properties
@@ -24,6 +26,10 @@ You may setup development environment by following below pre-reqs and steps to b
 
 1. Node 16.x or later
 2. Any editor - VScode, Text Editor or Terminal editors
+3. Docker Desktop for Windows/Mac - for running tests and developing this project in your local environment. The mongodb is run in a docker container. Alternatively you may install mongodb in your local.
+4. Checkout this git project to your local
+5. From the root of the project run, `npm install`
+6. To Start the service - From the root of the project run, `npm run dev`
 
 ### Build/Test/Run
 
@@ -37,4 +43,8 @@ Run below targets in a terminal,
 6. `npm run copyright` - Checks whether the code files has copyright header else this will add the copyright header for source code files that are added to Git
 7. `npm run upgrade` - Upgrades NPM dependencies to its latest version
 
-It is recommended to run the `npm run swagger` produce the latest Swagger API documentation. Once the project is run in `dev` mode/stage these APIs can be read via browser using `http://<hostname>:<port>/docs` URL i.e. `http://localhost:7009/docs`. The swagger APIs are not loaded in Production or Test environments.
+### Swagger APIs
+
+If you are developing in this project or writing a client to this project, you may refer the Swagger RESt API docs. Once the project is started, visit `http://localhost:<port>/api/v1/docs`.
+
+It is recommended to run the `npm run swagger` to produce the latest Swagger API documentation. Once the project is run in `dev` mode/stage these APIs can be read via browser using `http://<hostname>:<port>/docs` URL i.e. `http://localhost:7009/docs`. The swagger APIs are not loaded in Production or Test environments.

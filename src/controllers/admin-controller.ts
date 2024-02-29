@@ -1,10 +1,11 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { randomUUID } from "crypto";
 import { logger } from "../logger";
-import { Enquiry, Property, PropertyCategory, PropertyStatus } from "../types/stack-types";
-import { Route, Post, Body, Get, Path } from "tsoa";
-
+import { Enquiry, EnquirySearchRequest, Property } from "../types/stack-types";
+import { Route, Post, Body, Get, Path, Controller, Produces } from "tsoa";
+import PropertyService from "../service/property-service";
+import { injectable } from "tsyringe";
+import { LeadService } from "../service/lead-service";
 
 
 
@@ -14,45 +15,85 @@ import { Route, Post, Body, Get, Path } from "tsoa";
  * @author Ratheesh Nair
  * @since 1.0
  */
+@injectable()
 @Route("/admin")
-export class AdminController {
+export class AdminController extends Controller {
 
-    @Get("/enquries")
+    /**
+     * Constructor injects dependencies
+     * 
+     * @param propertyService Service instance that manages property
+     * @param leadService Service that manages leads
+     */
+    constructor(
+        private propertyService: PropertyService,
+        private leadService: LeadService) { super(); }
+
+    /**
+     * Find all leads in the system.
+     * 
+     * @returns All of the leads available in the system
+     */
+    @Get("/enquiry")
     public async getAllEnquries(): Promise<Enquiry[]> {
-        logger.info(`Get all enquiries`);
-        return [];
+        return this.leadService.getAll();
     }
     
-    @Get("/enquries/{from}/{to}")
-    public async getEnquries(@Path() from: Date, @Path() to: Date): Promise<Enquiry[]> {
+    /**
+     * Get leads that registered between a range of dates
+     * 
+     * @param from Date from 
+     * @param to Date till
+     * @returns One or more Enquiries that came in between the dates
+     */
+    @Get("/enqury/{from}/{to}")
+    public async getEnquries(@Path() from: Date, @Path() to: Date): Promise<Enquiry[] | null> {
         logger.info(`Get all enquiries from ${from}, to ${to}`);
-        return [];
+        return this.leadService.findByCreatedDateBetween(from, to);
     }
 
-    @Post("/property")
-    public async setProperty(@Body() property: Property): Promise<void> {
-        logger.info(`Adding a new Property : ${property}`);
+    /**
+     * Add a new property to the system, this will get listed on the site
+     * 
+     * @param property A property instance to create
+     * @returns Created property
+     */
+    @Post("/prop")
+    public async create(@Body() property: Property): Promise<Property> {
+        return this.propertyService.create(property);
     }
 
-    @Get("/property/{pid}")
-    public async getProperty(@Path() pid: string): Promise<Property> {
-        logger.info(`Get a new Property : ${pid}`);
-        return {
-            id: randomUUID(),
-            name: 'Prestige Lakefront',
-            shortDescription: '',
-            title: 'Lake front',
-            category: PropertyCategory.Residential,
-            status: PropertyStatus.New,
-            listedOn: new Date(),
-            builder: 'Prestige'
-        };
+    /**
+     * Get a lead by its unique id.
+     * 
+     * @param id Lead unique id
+     * @returns Lead details if found else empty
+     */
+    @Get("/lead/{id}")
+    public async get (@Path() id: string): Promise<Enquiry | null> {
+        return this.leadService.getById(id);
     }
 
 
-    @Get("/property")
-    public async getAllProperties(): Promise<Property[]> {
-        logger.info(`Get all properties`);
-        return [];
+    /**
+     * Get all the leads from the system.
+     * 
+     * @returns All the leads found in the system
+     */
+    @Get("/lead")
+    public async getAll(): Promise<Enquiry[]> {
+        return this.leadService.getAll();
     }
+
+
+    /**
+     * Get all the leads that are created in the system between a date range.
+     * 
+     * @returns All the leads found in the system
+     */
+    @Post("/lead")
+    public async search(@Body() request: EnquirySearchRequest): Promise<Enquiry[] | null> {
+        return this.leadService.find(request);
+    }
+
 }

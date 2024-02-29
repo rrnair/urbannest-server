@@ -10,10 +10,12 @@ import path from "path";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "../build/routes";
+import { container } from "tsyringe";
+import { Datasource } from "./db/datasource";
+import "reflect-metadata";
 
 // Setup App variables
 dotenv.config();
-
 
 // Check the environment we are deploying
 const stage:string = process.env.STAGE || 'dev';
@@ -34,6 +36,13 @@ const apiVersion = process.env.VERSION || 'v1';
 export const pathPrefix = `/api/${apiVersion}`;
 
 logger.info(`Binding to port: ${port}`);
+
+// Get mongodb connection parameters
+const mongodbUri: string = process.env.MONGO_URI || 'mongodb://localhost:27017';
+const mongodbName: string = process.env.MONGO_DB_NAME || 'urbannest';
+
+// Register the datasource instance in DI container. 
+container.register<Datasource>(Datasource, {useValue: new Datasource(mongodbUri, mongodbName)});
 
 // Create the application instance
 const app:Application = express();

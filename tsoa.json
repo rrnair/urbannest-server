@@ -6,7 +6,8 @@
       "specVersion": 3
     },
     "routes": {
-      "routesDir": "build"
+      "routesDir": "build",
+      "iocModule": "src/tsoa-ioc-container.ts"
     },
     "controllerPathGlobs": ["src/**/*-controller.ts"]
   }

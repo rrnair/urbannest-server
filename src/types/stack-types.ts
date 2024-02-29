@@ -46,7 +46,7 @@ export enum PropertyStatus {
 export interface Property {
     
     /** An Unique Id of the property */
-    id: string,
+    _id?: string,
 
     /** A short name of the property - `Brigade Metropolis` */
     name: string,
@@ -111,19 +111,36 @@ export interface Address {
 /** An enquiry from a website visitor */
 export interface Enquiry {
     
+    _id?: string,
+
     name: string,
     
     email: string,
     
     phone: string,
     
-    message: string,
+    createdOn?: Date,
+
+    message?: string,
+    
+    builder?: string,
     
     propertyId?: string,
     
     propertyCategory?: PropertyCategory
 }
 
-export interface EnquiryResponse {
-    message: string
+
+export interface EnquirySearchRequest {
+    builder?: string,
+
+    propertyCategory?: PropertyCategory
+}
+
+
+export interface PropertySearchRequest {
+
+    category: PropertyCategory,
+
+    status: PropertyStatus
 }
