@@ -2,7 +2,7 @@
 
 import { logger } from "../logger";
 import { Enquiry, EnquirySearchRequest, Property } from "../types/stack-types";
-import { Route, Post, Body, Get, Path, Controller, Produces } from "tsoa";
+import { Route, Post, Body, Get, Path, Controller } from "tsoa";
 import PropertyService from "../service/property-service";
 import { injectable } from "tsyringe";
 import { LeadService } from "../service/lead-service";

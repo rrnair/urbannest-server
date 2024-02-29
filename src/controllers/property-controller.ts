@@ -1,6 +1,6 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { Controller, Get, Path, Post, Route} from "tsoa";
+import { Controller, Get, Path, Route} from "tsoa";
 import { Property, PropertyStatus, PropertyCategory } from "../types/stack-types";
 import { logger } from "../logger";
 import PropertyService from "../service/property-service";

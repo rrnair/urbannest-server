@@ -24,7 +24,7 @@ export class Datasource {
      * @param dbName Database name to use
      */
     constructor(private uri: string, dbName: string) {
-        this.client = new MongoClient(uri);
+        this.client = new MongoClient(this.uri);
         this.database = this.client.db(dbName);
     }
 
