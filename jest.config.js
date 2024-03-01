@@ -2,6 +2,7 @@
 
 
 module.exports = {
+  preset: "@shelf/jest-mongodb",
   clearMocks: false,
   collectCoverage: true,
   coverageDirectory: "coverage",
@@ -26,4 +27,15 @@ module.exports = {
     ]
   ],
   testResultsProcessor: "./node_modules/jest-html-reporter",
+  mongodbMemoryServerOptions: {
+    binary: {
+      version: '4.0.3',
+      skipMD5: true,
+    },
+    instance: {
+      dbName: 'jest',
+    },
+    autoStart: false,
+    mongoURLEnvName: 'MONGODB_URI',
+  },
 };

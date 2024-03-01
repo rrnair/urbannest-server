@@ -2,4 +2,4 @@
 
 
 process.env.PORT = 7009;
-process.env.STAGE = 'Test';
+process.env.STAGE = 'test';

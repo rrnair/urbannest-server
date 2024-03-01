@@ -1,18 +1,18 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
 import * as dotenv from "dotenv";
-import express, { Application, Router } from "express";
+import express, {Application, Router} from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { StackUtils } from "./stack-utils";
-import { logger } from "./logger";
+import {StackUtils} from "./stack-utils";
+import {logger} from "./logger";
 import path from "path";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import { RegisterRoutes } from "../build/routes";
-import { container } from "tsyringe";
-import { Datasource } from "./db/datasource";
+import {RegisterRoutes} from "../build/routes";
+import {container} from "tsyringe";
 import "reflect-metadata";
+import {Db, MongoClient} from "mongodb";
 
 // Setup App variables
 dotenv.config();
@@ -21,7 +21,8 @@ dotenv.config();
 const stage:string = process.env.STAGE || 'dev';
 
 // Get the deployment configuration file location
-const configFile:string = path.resolve(process.env.DEPLOY_CONFIG_FILE || path.join(__dirname, '/../config/deploy-config.json'));
+const configFile:string = path.resolve(process.env.DEPLOY_CONFIG_FILE 
+    || path.join(__dirname, '/../config/deploy-config.json'));
 
 logger.info(`Using deployment config file at ${configFile}, Stage: ${stage}`);
 
@@ -41,43 +42,48 @@ logger.info(`Binding to port: ${port}`);
 const mongodbUri: string = process.env.MONGO_URI || 'mongodb://localhost:27017';
 const mongodbName: string = process.env.MONGO_DB_NAME || 'urbannest';
 
-// Register the datasource instance in DI container. 
-container.register<Datasource>(Datasource, {useValue: new Datasource(mongodbUri, mongodbName)});
+const mongoClient = new MongoClient(mongodbUri);
+mongoClient.connect().then(client => {
+    
+    logger.info("Connected to mongodb");
 
-// Create the application instance
-const app:Application = express();
+    const db = client.db(mongodbName);
+    container.register<Db>(Db, {useValue: db});
 
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use(morgan("tiny"));
+    // Create the application instance
+    const app:Application = express();
 
-// Create a base router
-const controllerRoutes = Router();
+    app.use(helmet());
+    app.use(cors());
+    app.use(express.json());
+    app.use(morgan("tiny"));
 
-// Register all routes
-RegisterRoutes(controllerRoutes);
+    // Create a base router
+    const controllerRoutes = Router();
 
-// Mount all controller routes under the prefix /api/{version}/
-app.use(pathPrefix, controllerRoutes);
+    // Register all routes
+    RegisterRoutes(controllerRoutes);
 
-// Enable API documentation for dev env
-if (stage === 'dev' || stage === 'test') {
-    app.use(express.static("build"));
+    // Mount all controller routes under the prefix /api/{version}/
+    app.use(pathPrefix, controllerRoutes);
 
-    // Dev UI team can use "/docs" to go through the exposed REST APIs, this produces a Swagger 3.0 doc
-    app.use(
-        `${pathPrefix}/docs`,
-        swaggerUi.serve,
-        swaggerUi.setup(undefined, {
-            swaggerOptions: {
-                url: "/swagger.json"
-            }
-        })
-    );
-}
+    // Enable API documentation for dev env
+    if (stage === 'dev' || stage === 'test') {
+        app.use(express.static("build"));
 
-app.listen(port, () => {
-    logger.info(`Server started listening on port ${port}`);
+        // Dev UI team can use "/docs" to go through the exposed REST APIs, this produces a Swagger 3.0 doc
+        app.use(
+            `${pathPrefix}/docs`,
+            swaggerUi.serve,
+            swaggerUi.setup(undefined, {
+                swaggerOptions: {
+                    url: "/swagger.json"
+                }
+            })
+        );
+    }
+
+    app.listen(port, () => {
+        logger.info(`Server started listening on port ${port}`);
+    });
 });
-

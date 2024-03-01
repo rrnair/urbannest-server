@@ -1,8 +1,8 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { Document } from "mongodb";
-import { ReadOnlyRepository } from "./readonly-repository";
-import { WriteOnlyRepository } from "./writeonly-repository";
+import {Document} from "mongodb";
+import {ReadOnlyRepository} from "./readonly-repository";
+import {WriteOnlyRepository} from "./writeonly-repository";
 
 /**
  * A base repository to keep this simple and let implementation class decide
@@ -18,18 +18,18 @@ export abstract class BaseRepository<T extends Document> implements WriteOnlyRep
     }
 
     async findOne(id: string): Promise<T | null> {
-        throw new Error("Method not implemented.");
+        throw new Error(`Method not implemented. ${id}`);
     }
 
     async create(item: T): Promise<T> {
-        throw new Error("Method not implemented.");
+        throw new Error(`Method not implemented.${item}`);
     }
 
     async update(item: T): Promise<T> {
-        throw new Error("Method not implemented.");
+        throw new Error(`Method not implemented. ${item}`);
     }
 
     async delete(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        throw new Error(`Method not implemented. ${id}`);
     }
 }

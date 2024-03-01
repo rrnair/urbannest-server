@@ -1,7 +1,7 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { IocContainer } from "tsoa";
-import { container } from "tsyringe";
+import {IocContainer} from "tsoa";
+import {container} from "tsyringe";
 
 /**
  * A function that TSOA uses while generating the OpenAPI spec.

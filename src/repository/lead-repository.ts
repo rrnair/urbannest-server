@@ -1,9 +1,9 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { singleton } from "tsyringe";
-import { BaseRepository } from "./base-repository";
-import { Enquiry, EnquirySearchRequest } from "../types/stack-types";
-import { Collection } from "mongodb";
+import {singleton} from "tsyringe";
+import {BaseRepository} from "./base-repository";
+import {Enquiry, EnquirySearchRequest} from "../types/stack-types";
+import {Collection, Db} from "mongodb";
 
 
 /**
@@ -13,10 +13,13 @@ import { Collection } from "mongodb";
 @singleton()
 export class LeadRepository extends BaseRepository<Enquiry> {
 
+    private collection: Collection<Enquiry>;
+
     /** Inject Collection instance Enquiry */
-    constructor(private collection: Collection<Enquiry>) {
+    constructor(db: Db) {
         super();
-    }
+        this.collection = db.collection<Enquiry>('enquiry');
+    }   
 
     /**
      * Find leads using the specified multi-faceted search request.
@@ -76,7 +79,7 @@ export class LeadRepository extends BaseRepository<Enquiry> {
      * @returns The newly created enquiry
      */
     override async create(item: Enquiry): Promise<Enquiry> {
-        const { insertedId } = await this.collection.insertOne(item);    
+        const {insertedId} = await this.collection.insertOne(item);    
         return {...item, _id: insertedId};
     }
 

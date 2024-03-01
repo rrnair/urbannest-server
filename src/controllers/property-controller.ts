@@ -1,10 +1,10 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { Controller, Get, Path, Route} from "tsoa";
-import { Property, PropertyStatus, PropertyCategory } from "../types/stack-types";
-import { logger } from "../logger";
+import {Controller, Get, Path, Route} from "tsoa";
+import {Property, PropertyStatus, PropertyCategory} from "../types/stack-types";
+import {logger} from "../logger";
 import PropertyService from "../service/property-service";
-import { injectable } from "tsyringe";
+import {injectable} from "tsyringe";
 
 /**
  * Controller that handles property read/write
@@ -14,7 +14,7 @@ import { injectable } from "tsyringe";
  */
 @injectable()
 @Route("/props")
-export class PropertyListController extends Controller {
+export class PropertyController extends Controller {
 
     constructor(private propertyService: PropertyService) { super(); }
 

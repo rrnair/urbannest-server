@@ -1,7 +1,7 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
 import * as filesystem from 'fs';
-import { logger } from './logger';
+import {logger} from './logger';
 
 
 /**

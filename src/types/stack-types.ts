@@ -1,5 +1,6 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
+import {Document} from "mongodb";
 
 /**
  * A response object for Ping request
@@ -43,7 +44,7 @@ export enum PropertyStatus {
  * A definition of a property, the property can be a new, completed or upcoming property. These details
  * are listed on the site by its status classification i.e. new/complete/upcoming.
  */
-export interface Property {
+export interface Property extends Document {
     
     /** An Unique Id of the property */
     _id?: string,
@@ -68,6 +69,9 @@ export interface Property {
 
     /** Whats the status of the property - new/completed/upcoming */
     status: PropertyStatus,
+
+    /** When project is started */
+    startedOn?: Date,
 
     /** If completed then when it was compeleted */
     completedOn?: Date,
@@ -109,7 +113,7 @@ export interface Address {
 
 
 /** An enquiry from a website visitor */
-export interface Enquiry {
+export interface Enquiry extends Document {
     
     _id?: string,
 

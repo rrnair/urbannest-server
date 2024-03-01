@@ -1,9 +1,9 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { Collection } from "mongodb";
-import { Property } from "../types/stack-types";
-import { BaseRepository } from "./base-repository";
-import { singleton } from "tsyringe";
+import {Collection, Db} from "mongodb";
+import {Property} from "../types/stack-types";
+import {BaseRepository} from "./base-repository";
+import {singleton} from "tsyringe";
 
 /**
  * A repository that manages properties.
@@ -14,9 +14,12 @@ import { singleton } from "tsyringe";
 @singleton()
 export default class PropertyRepository extends BaseRepository<Property> {
     
-    /** Inject property collection instance */
-    constructor(private collection: Collection<Property>) {
+    private collection: Collection<Property>;
+
+    /** Inject property datasource instance */
+    constructor(db: Db) {
         super();
+        this.collection = db.collection<Property>('property');
     }
 
     /**
@@ -45,7 +48,7 @@ export default class PropertyRepository extends BaseRepository<Property> {
      * @returns Created item
      */
     override async create(item: Property): Promise<Property> {
-        const { insertedId } = await this.collection.insertOne(item);    
+        const {insertedId} = await this.collection.insertOne(item);    
         return {...item, _id: insertedId};
     }
 

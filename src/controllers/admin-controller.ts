@@ -1,11 +1,11 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { logger } from "../logger";
-import { Enquiry, EnquirySearchRequest, Property } from "../types/stack-types";
-import { Route, Post, Body, Get, Path, Controller } from "tsoa";
+import {logger} from "../logger";
+import {Enquiry, EnquirySearchRequest, Property} from "../types/stack-types";
+import {Route, Post, Body, Get, Path, Controller} from "tsoa";
 import PropertyService from "../service/property-service";
-import { injectable } from "tsyringe";
-import { LeadService } from "../service/lead-service";
+import {injectable} from "tsyringe";
+import {LeadService} from "../service/lead-service";
 
 
 
@@ -29,15 +29,6 @@ export class AdminController extends Controller {
         private propertyService: PropertyService,
         private leadService: LeadService) { super(); }
 
-    /**
-     * Find all leads in the system.
-     * 
-     * @returns All of the leads available in the system
-     */
-    @Get("/enquiry")
-    public async getAllEnquries(): Promise<Enquiry[]> {
-        return this.leadService.getAll();
-    }
     
     /**
      * Get leads that registered between a range of dates
@@ -46,7 +37,7 @@ export class AdminController extends Controller {
      * @param to Date till
      * @returns One or more Enquiries that came in between the dates
      */
-    @Get("/enqury/{from}/{to}")
+    @Get("/lead/{from}/{to}")
     public async getEnquries(@Path() from: Date, @Path() to: Date): Promise<Enquiry[] | null> {
         logger.info(`Get all enquiries from ${from}, to ${to}`);
         return this.leadService.findByCreatedDateBetween(from, to);
@@ -95,5 +86,4 @@ export class AdminController extends Controller {
     public async search(@Body() request: EnquirySearchRequest): Promise<Enquiry[] | null> {
         return this.leadService.find(request);
     }
-
 }

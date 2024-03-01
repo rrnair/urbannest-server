@@ -1,9 +1,8 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { Enquiry, EnquirySearchRequest } from "src/types/stack-types";
-import { Datasource } from "../db/datasource";
-import { LeadRepository } from "../repository/lead-repository";
-import { singleton } from "tsyringe";
+import {Enquiry, EnquirySearchRequest} from "src/types/stack-types";
+import {LeadRepository} from "../repository/lead-repository";
+import {singleton} from "tsyringe";
 
 /**
  * The service manages leads in other words Enquiries. These are public
@@ -18,12 +17,7 @@ import { singleton } from "tsyringe";
 export class LeadService {
 
     /** Repository instance that read/writes to database */
-    private leadRepository: LeadRepository;
-
-    /** Inject datasource  */
-    constructor(datasource: Datasource) {
-        this.leadRepository = new LeadRepository(datasource.getCollection<any>('leads'));
-    }
+    constructor(private leadRepository: LeadRepository) { }
 
     /** Find all leads */
     public async getAll() : Promise<Enquiry[]> {

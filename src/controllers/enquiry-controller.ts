@@ -1,10 +1,10 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import { injectable } from "tsyringe";
-import { logger } from "../logger";
-import { Enquiry } from "../types/stack-types";
-import { Route, Post, Body } from "tsoa";
-import { LeadService } from "../service/lead-service";
+import {injectable} from "tsyringe";
+import {logger} from "../logger";
+import {Enquiry} from "../types/stack-types";
+import {Route, Post, Body} from "tsoa";
+import {LeadService} from "../service/lead-service";
 
 /**
  * Controller handles enquiry from users that visited the site
