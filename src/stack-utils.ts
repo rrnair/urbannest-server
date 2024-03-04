@@ -19,9 +19,9 @@ export class StackUtils {
      * The environment can be set via DEPLOYMENT_TYPE environment variable set into the shell.
      *
      * @param configFile directory path that contains `deployment-config.json`
-     * @returns  Promise<DeploymentConfig> environment configuration
+     * @returns  Key/value pairs - environment configuration
      */
-     static getDeploymentConfig(configFile:string, stage:string): {[key:string]: {[key:string]: string}} {
+     static getDeploymentConfig(configFile:string, stage:string): {[key:string]: string} {
 
         // Does the file exists in the path
         if (! filesystem.existsSync(configFile)) {

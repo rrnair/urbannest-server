@@ -29,7 +29,6 @@ export class EnquiryController {
     @Post("/")
     public async post (@Body() enquiry: Enquiry): Promise<Enquiry> {
         logger.info(`Creating a new lead for : ${enquiry.propertyCategory}`);
-        enquiry.createdOn = new Date();
         return this.leadService.create(enquiry);
     }
 }

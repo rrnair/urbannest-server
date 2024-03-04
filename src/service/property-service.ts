@@ -1,9 +1,8 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
 import {Property} from "../types/stack-types";
-import PropertyRepository from "../repository/property-repository";
-import {singleton} from "tsyringe";
-
+import {inject, singleton} from "tsyringe";
+import {PropertyModel} from "../model/schema";
 
 /** 
  * Manage real estate properties from the database
@@ -15,14 +14,14 @@ import {singleton} from "tsyringe";
 export default class PropertyService {
 
     /** Read/write property details from/to database */
-    constructor(private propertyRepository: PropertyRepository) { }
+    constructor(@inject("PropertyModel") private propertyModel: typeof PropertyModel) { }
 
     /**
      * Get all Property details from the database
      * @returns One or more properties 
      */
     public async getAll() : Promise<Property[]> {
-        return this.propertyRepository.findAll();
+        return this.propertyModel.find();
     }
 
     /**
@@ -32,7 +31,7 @@ export default class PropertyService {
      * @returns Property detail if found else null
      */
     public async getById(id: string): Promise<Property | null> {
-       return this.propertyRepository.findOne(id);
+       return this.propertyModel.findById(id);
     }
 
     /**
@@ -42,7 +41,7 @@ export default class PropertyService {
      * @returns Created property
      */
     public async create(property: Property): Promise<Property> {
-        return this.propertyRepository.create(property);
+        return this.propertyModel.create(property);
     }
 
     /**
@@ -51,8 +50,9 @@ export default class PropertyService {
      * @param property Property to update
      * @returns Updated property
      */
-    public async update(property: Property): Promise<Property> {
-        return this.propertyRepository.update(property);
+    public async update(property: Property): Promise<boolean | null> {
+        
+       return this.propertyModel.findOneAndUpdate(property);
     }
 
     /**
@@ -61,7 +61,7 @@ export default class PropertyService {
      * @param property Property to delete
      * @returns True if deleted else false
      */
-    public async delete(id: string): Promise<boolean> {
-        return this.propertyRepository.delete(id);
+    public async delete(id: string): Promise<boolean | null> {
+        return this.propertyModel.findByIdAndDelete(id);
     }
 }

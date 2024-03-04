@@ -40,7 +40,7 @@ export class AdminController extends Controller {
     @Get("/lead/{from}/{to}")
     public async getEnquries(@Path() from: Date, @Path() to: Date): Promise<Enquiry[] | null> {
         logger.info(`Get all enquiries from ${from}, to ${to}`);
-        return this.leadService.findByCreatedDateBetween(from, to);
+        return await this.leadService.findByCreatedDateBetween(from, to);
     }
 
     /**
@@ -51,7 +51,7 @@ export class AdminController extends Controller {
      */
     @Post("/prop")
     public async create(@Body() property: Property): Promise<Property> {
-        return this.propertyService.create(property);
+        return await this.propertyService.create(property);
     }
 
     /**
@@ -62,7 +62,7 @@ export class AdminController extends Controller {
      */
     @Get("/lead/{id}")
     public async get (@Path() id: string): Promise<Enquiry | null> {
-        return this.leadService.getById(id);
+        return await this.leadService.getById(id);
     }
 
 
@@ -73,7 +73,7 @@ export class AdminController extends Controller {
      */
     @Get("/lead")
     public async getAll(): Promise<Enquiry[]> {
-        return this.leadService.getAll();
+        return await this.leadService.getAll();
     }
 
 
@@ -84,6 +84,6 @@ export class AdminController extends Controller {
      */
     @Post("/lead")
     public async search(@Body() request: EnquirySearchRequest): Promise<Enquiry[] | null> {
-        return this.leadService.find(request);
+        return await this.leadService.find(request);
     }
 }

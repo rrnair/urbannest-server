@@ -26,12 +26,8 @@ export class PropertyController extends Controller {
      * @returns Property matching the specified id else undefined
      */
     @Get("/{id}")
-    public async get(@Path() id: string): Promise<Property | undefined> {
-        const prop =  this.propertyService.getById(id);
-        if (! prop) {
-            return prop;
-        }
-        return undefined;
+    public async get(@Path() id: string): Promise<Property | null> {
+        return this.propertyService.getById(id);
     }
 
     /**
@@ -50,19 +46,6 @@ export class PropertyController extends Controller {
             return this.getAll();
         }
 
-        // Compute all conditions
-        // If the category is `all` and the status is `all` then return all available properties
-        if ((PropertyCategory.All === category || PropertyCategory.Residential === category 
-                || PropertyCategory.Commerical === category) 
-            && (PropertyStatus.All === status || PropertyStatus.Completed === status 
-            || PropertyStatus.New === status || PropertyStatus.Upcoming === status)) {
-            
-                logger.info(`Property listing - category: ${category}, Status: ${status}`);
-                return (await this.getAll()).filter(
-                    p => (PropertyCategory.All == category || p.category === category) 
-                            && (PropertyStatus.All === status || p.status == status));
-        }
-
         // No idea about the status - return empty list
         return [];
     }
@@ -72,8 +55,9 @@ export class PropertyController extends Controller {
      * 
      * @returns One or more properties
      */
-    @Get("/all")
+    @Get("/")
     public async getAll(): Promise<Property[]> {
-        return this.propertyService.getAll();
+        logger.info("Fetching all properties ");
+        return await this.propertyService.getAll();
     }
 }

@@ -1,11 +1,17 @@
 {
   "dev": {
-    "port": 7009
+    "port": 7009,
+    "mongodbUri": "mongodb://localhost:27017",
+    "mongodbName": "urbannest"
   },
   "test": {
-    "port": 7009
+    "port": 7009,
+    "mongodbUri": "mongodb://dummy-host:27017",
+    "mongodbName": "urbannest"
   },
   "prod": {
-    "port": 7009
+    "port": 7009,
+    "mongodbUri": "mongodb://localhost:27017",
+    "mongodbName": "urbannest"
   }
 }

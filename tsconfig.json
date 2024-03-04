@@ -25,7 +25,7 @@
     // "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
 
     /* Modules */
-    "module": "commonjs",                                /* Specify what module code is generated. */
+    "module": "CommonJS",                                /* Specify what module code is generated. */
     "outDir": "dist",                                    /* Specify an output folder for all emitted files. */
     "rootDir": "./",                                  /* Specify the root folder within your source files. */
     "resolveJsonModule": true,                           /* Enable importing .json files. */
@@ -109,7 +109,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
 
-  "include": ["./build", "./src", "./config", "declarations.d.ts"],
+  "include": ["./build", "./src", "./test", "./config", "declarations.d.ts"],
   "exclude": [
     "node_modules",
     "lib",

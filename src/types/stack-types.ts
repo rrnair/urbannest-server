@@ -1,6 +1,5 @@
 /* Copyright (c) 2024 Ubran Nest or its affiliates. All rights reserved. */
 
-import {Document} from "mongodb";
 
 /**
  * A response object for Ping request
@@ -44,7 +43,7 @@ export enum PropertyStatus {
  * A definition of a property, the property can be a new, completed or upcoming property. These details
  * are listed on the site by its status classification i.e. new/complete/upcoming.
  */
-export interface Property extends Document {
+export interface Property {
     
     /** An Unique Id of the property */
     _id?: string,
@@ -88,6 +87,9 @@ export interface Property extends Document {
     /** Builder name */
     builder: string,
 
+    createdAt?: Date,
+
+    updatedAt?: Date
 }
 
 /**
@@ -113,7 +115,7 @@ export interface Address {
 
 
 /** An enquiry from a website visitor */
-export interface Enquiry extends Document {
+export interface Enquiry {
     
     _id?: string,
 
@@ -122,8 +124,6 @@ export interface Enquiry extends Document {
     email: string,
     
     phone: string,
-    
-    createdOn?: Date,
 
     message?: string,
     
@@ -131,7 +131,11 @@ export interface Enquiry extends Document {
     
     propertyId?: string,
     
-    propertyCategory?: PropertyCategory
+    propertyCategory?: PropertyCategory,
+
+    createdAt?: Date,
+
+    updatedAt?: Date
 }
 
 
@@ -148,3 +152,4 @@ export interface PropertySearchRequest {
 
     status: PropertyStatus
 }
+
